@@ -14,7 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          age: number | null
+          chronic_conditions: string | null
+          consent_at: string | null
+          consent_given: boolean
+          created_at: string
+          emergency_contact_name: string | null
+          emergency_contact_phone: string | null
+          full_name: string | null
+          id: string
+          is_pregnant: boolean
+          updated_at: string
+        }
+        Insert: {
+          age?: number | null
+          chronic_conditions?: string | null
+          consent_at?: string | null
+          consent_given?: boolean
+          created_at?: string
+          emergency_contact_name?: string | null
+          emergency_contact_phone?: string | null
+          full_name?: string | null
+          id: string
+          is_pregnant?: boolean
+          updated_at?: string
+        }
+        Update: {
+          age?: number | null
+          chronic_conditions?: string | null
+          consent_at?: string | null
+          consent_given?: boolean
+          created_at?: string
+          emergency_contact_name?: string | null
+          emergency_contact_phone?: string | null
+          full_name?: string | null
+          id?: string
+          is_pregnant?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
