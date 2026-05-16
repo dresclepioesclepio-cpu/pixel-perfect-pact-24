@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowRight,
   ShieldCheck,
@@ -90,14 +90,17 @@ function Hero() {
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Button
+              asChild
               size="lg"
               className="group h-12 bg-[image:var(--gradient-primary)] px-6 text-primary-foreground shadow-[var(--shadow-glow)] hover:opacity-95"
             >
-              Iniciar orientação
-              <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+              <Link to="/signup">
+                Iniciar orientação
+                <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+              </Link>
             </Button>
-            <Button size="lg" variant="ghost" className="h-12 px-6">
-              Como funciona
+            <Button asChild size="lg" variant="ghost" className="h-12 px-6">
+              <a href="#como-funciona">Como funciona</a>
             </Button>
           </div>
 
@@ -438,18 +441,22 @@ function FinalCta() {
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Button
+                asChild
                 size="lg"
                 className="h-12 bg-card px-6 text-foreground hover:bg-card/90"
               >
-                Iniciar orientação
-                <ArrowRight className="ml-1 h-4 w-4" />
+                <Link to="/signup">
+                  Iniciar orientação
+                  <ArrowRight className="ml-1 h-4 w-4" />
+                </Link>
               </Button>
               <Button
+                asChild
                 size="lg"
                 variant="ghost"
                 className="h-12 px-6 text-primary-foreground hover:bg-white/10"
               >
-                Ler o disclaimer
+                <Link to="/login">Já tenho conta</Link>
               </Button>
             </div>
           </div>

@@ -29,11 +29,11 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" className="hidden sm:inline-flex">
-            Entrar
+          <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
+            <Link to="/login">Entrar</Link>
           </Button>
-          <Button size="sm" className="bg-[image:var(--gradient-primary)] text-primary-foreground shadow-[var(--shadow-soft)] hover:opacity-95">
-            Começar
+          <Button asChild size="sm" className="bg-[image:var(--gradient-primary)] text-primary-foreground shadow-[var(--shadow-soft)] hover:opacity-95">
+            <Link to="/signup">Começar</Link>
           </Button>
         </div>
       </div>
