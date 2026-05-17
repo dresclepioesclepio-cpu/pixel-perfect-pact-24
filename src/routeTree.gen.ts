@@ -14,6 +14,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticated/app.index'
+import { Route as ApiIntakeChatRouteImport } from './routes/api/intake/chat'
 import { Route as AuthenticatedAppProfileRouteImport } from './routes/_authenticated/app.profile'
 import { Route as AuthenticatedAppIntakeRouteImport } from './routes/_authenticated/app.intake'
 import { Route as AuthenticatedAppHistoryRouteImport } from './routes/_authenticated/app.history'
@@ -42,6 +43,11 @@ const AuthenticatedAppIndexRoute = AuthenticatedAppIndexRouteImport.update({
   path: '/app/',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const ApiIntakeChatRoute = ApiIntakeChatRouteImport.update({
+  id: '/api/intake/chat',
+  path: '/api/intake/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedAppProfileRoute = AuthenticatedAppProfileRouteImport.update({
   id: '/app/profile',
   path: '/app/profile',
@@ -65,6 +71,7 @@ export interface FileRoutesByFullPath {
   '/app/history': typeof AuthenticatedAppHistoryRoute
   '/app/intake': typeof AuthenticatedAppIntakeRoute
   '/app/profile': typeof AuthenticatedAppProfileRoute
+  '/api/intake/chat': typeof ApiIntakeChatRoute
   '/app/': typeof AuthenticatedAppIndexRoute
 }
 export interface FileRoutesByTo {
@@ -74,6 +81,7 @@ export interface FileRoutesByTo {
   '/app/history': typeof AuthenticatedAppHistoryRoute
   '/app/intake': typeof AuthenticatedAppIntakeRoute
   '/app/profile': typeof AuthenticatedAppProfileRoute
+  '/api/intake/chat': typeof ApiIntakeChatRoute
   '/app': typeof AuthenticatedAppIndexRoute
 }
 export interface FileRoutesById {
@@ -85,6 +93,7 @@ export interface FileRoutesById {
   '/_authenticated/app/history': typeof AuthenticatedAppHistoryRoute
   '/_authenticated/app/intake': typeof AuthenticatedAppIntakeRoute
   '/_authenticated/app/profile': typeof AuthenticatedAppProfileRoute
+  '/api/intake/chat': typeof ApiIntakeChatRoute
   '/_authenticated/app/': typeof AuthenticatedAppIndexRoute
 }
 export interface FileRouteTypes {
@@ -96,6 +105,7 @@ export interface FileRouteTypes {
     | '/app/history'
     | '/app/intake'
     | '/app/profile'
+    | '/api/intake/chat'
     | '/app/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -105,6 +115,7 @@ export interface FileRouteTypes {
     | '/app/history'
     | '/app/intake'
     | '/app/profile'
+    | '/api/intake/chat'
     | '/app'
   id:
     | '__root__'
@@ -115,6 +126,7 @@ export interface FileRouteTypes {
     | '/_authenticated/app/history'
     | '/_authenticated/app/intake'
     | '/_authenticated/app/profile'
+    | '/api/intake/chat'
     | '/_authenticated/app/'
   fileRoutesById: FileRoutesById
 }
@@ -123,6 +135,7 @@ export interface RootRouteChildren {
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
+  ApiIntakeChatRoute: typeof ApiIntakeChatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -161,6 +174,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/app/'
       preLoaderRoute: typeof AuthenticatedAppIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
+    }
+    '/api/intake/chat': {
+      id: '/api/intake/chat'
+      path: '/api/intake/chat'
+      fullPath: '/api/intake/chat'
+      preLoaderRoute: typeof ApiIntakeChatRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/app/profile': {
       id: '/_authenticated/app/profile'
@@ -209,7 +229,18 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
+  ApiIntakeChatRoute: ApiIntakeChatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
