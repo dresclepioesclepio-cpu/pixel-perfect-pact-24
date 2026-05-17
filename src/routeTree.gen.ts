@@ -14,9 +14,11 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticated/app.index'
+import { Route as ApiIntakeChatRouteImport } from './routes/api/intake/chat'
 import { Route as AuthenticatedAppProfileRouteImport } from './routes/_authenticated/app.profile'
 import { Route as AuthenticatedAppIntakeRouteImport } from './routes/_authenticated/app.intake'
 import { Route as AuthenticatedAppHistoryRouteImport } from './routes/_authenticated/app.history'
+import { Route as AuthenticatedAppIntakeSessionIdRouteImport } from './routes/_authenticated/app.intake.$sessionId'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -42,6 +44,11 @@ const AuthenticatedAppIndexRoute = AuthenticatedAppIndexRouteImport.update({
   path: '/app/',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const ApiIntakeChatRoute = ApiIntakeChatRouteImport.update({
+  id: '/api/intake/chat',
+  path: '/api/intake/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedAppProfileRoute = AuthenticatedAppProfileRouteImport.update({
   id: '/app/profile',
   path: '/app/profile',
@@ -57,24 +64,34 @@ const AuthenticatedAppHistoryRoute = AuthenticatedAppHistoryRouteImport.update({
   path: '/app/history',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedAppIntakeSessionIdRoute =
+  AuthenticatedAppIntakeSessionIdRouteImport.update({
+    id: '/$sessionId',
+    path: '/$sessionId',
+    getParentRoute: () => AuthenticatedAppIntakeRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/app/history': typeof AuthenticatedAppHistoryRoute
-  '/app/intake': typeof AuthenticatedAppIntakeRoute
+  '/app/intake': typeof AuthenticatedAppIntakeRouteWithChildren
   '/app/profile': typeof AuthenticatedAppProfileRoute
+  '/api/intake/chat': typeof ApiIntakeChatRoute
   '/app/': typeof AuthenticatedAppIndexRoute
+  '/app/intake/$sessionId': typeof AuthenticatedAppIntakeSessionIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/app/history': typeof AuthenticatedAppHistoryRoute
-  '/app/intake': typeof AuthenticatedAppIntakeRoute
+  '/app/intake': typeof AuthenticatedAppIntakeRouteWithChildren
   '/app/profile': typeof AuthenticatedAppProfileRoute
+  '/api/intake/chat': typeof ApiIntakeChatRoute
   '/app': typeof AuthenticatedAppIndexRoute
+  '/app/intake/$sessionId': typeof AuthenticatedAppIntakeSessionIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -83,9 +100,11 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/_authenticated/app/history': typeof AuthenticatedAppHistoryRoute
-  '/_authenticated/app/intake': typeof AuthenticatedAppIntakeRoute
+  '/_authenticated/app/intake': typeof AuthenticatedAppIntakeRouteWithChildren
   '/_authenticated/app/profile': typeof AuthenticatedAppProfileRoute
+  '/api/intake/chat': typeof ApiIntakeChatRoute
   '/_authenticated/app/': typeof AuthenticatedAppIndexRoute
+  '/_authenticated/app/intake/$sessionId': typeof AuthenticatedAppIntakeSessionIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -96,7 +115,9 @@ export interface FileRouteTypes {
     | '/app/history'
     | '/app/intake'
     | '/app/profile'
+    | '/api/intake/chat'
     | '/app/'
+    | '/app/intake/$sessionId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -105,7 +126,9 @@ export interface FileRouteTypes {
     | '/app/history'
     | '/app/intake'
     | '/app/profile'
+    | '/api/intake/chat'
     | '/app'
+    | '/app/intake/$sessionId'
   id:
     | '__root__'
     | '/'
@@ -115,7 +138,9 @@ export interface FileRouteTypes {
     | '/_authenticated/app/history'
     | '/_authenticated/app/intake'
     | '/_authenticated/app/profile'
+    | '/api/intake/chat'
     | '/_authenticated/app/'
+    | '/_authenticated/app/intake/$sessionId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -123,6 +148,7 @@ export interface RootRouteChildren {
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
+  ApiIntakeChatRoute: typeof ApiIntakeChatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -162,6 +188,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/api/intake/chat': {
+      id: '/api/intake/chat'
+      path: '/api/intake/chat'
+      fullPath: '/api/intake/chat'
+      preLoaderRoute: typeof ApiIntakeChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/app/profile': {
       id: '/_authenticated/app/profile'
       path: '/app/profile'
@@ -183,19 +216,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppHistoryRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/app/intake/$sessionId': {
+      id: '/_authenticated/app/intake/$sessionId'
+      path: '/$sessionId'
+      fullPath: '/app/intake/$sessionId'
+      preLoaderRoute: typeof AuthenticatedAppIntakeSessionIdRouteImport
+      parentRoute: typeof AuthenticatedAppIntakeRoute
+    }
   }
 }
 
+interface AuthenticatedAppIntakeRouteChildren {
+  AuthenticatedAppIntakeSessionIdRoute: typeof AuthenticatedAppIntakeSessionIdRoute
+}
+
+const AuthenticatedAppIntakeRouteChildren: AuthenticatedAppIntakeRouteChildren =
+  {
+    AuthenticatedAppIntakeSessionIdRoute: AuthenticatedAppIntakeSessionIdRoute,
+  }
+
+const AuthenticatedAppIntakeRouteWithChildren =
+  AuthenticatedAppIntakeRoute._addFileChildren(
+    AuthenticatedAppIntakeRouteChildren,
+  )
+
 interface AuthenticatedRouteChildren {
   AuthenticatedAppHistoryRoute: typeof AuthenticatedAppHistoryRoute
-  AuthenticatedAppIntakeRoute: typeof AuthenticatedAppIntakeRoute
+  AuthenticatedAppIntakeRoute: typeof AuthenticatedAppIntakeRouteWithChildren
   AuthenticatedAppProfileRoute: typeof AuthenticatedAppProfileRoute
   AuthenticatedAppIndexRoute: typeof AuthenticatedAppIndexRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAppHistoryRoute: AuthenticatedAppHistoryRoute,
-  AuthenticatedAppIntakeRoute: AuthenticatedAppIntakeRoute,
+  AuthenticatedAppIntakeRoute: AuthenticatedAppIntakeRouteWithChildren,
   AuthenticatedAppProfileRoute: AuthenticatedAppProfileRoute,
   AuthenticatedAppIndexRoute: AuthenticatedAppIndexRoute,
 }
@@ -209,17 +263,8 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
+  ApiIntakeChatRoute: ApiIntakeChatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

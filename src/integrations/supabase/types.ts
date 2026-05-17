@@ -14,6 +14,86 @@ export type Database = {
   }
   public: {
     Tables: {
+      intake_messages: {
+        Row: {
+          created_at: string
+          id: string
+          parts: Json
+          role: string
+          session_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          parts?: Json
+          role: string
+          session_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          parts?: Json
+          role?: string
+          session_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "intake_messages_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "intake_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      intake_sessions: {
+        Row: {
+          chief_complaint: string | null
+          completed_at: string | null
+          created_at: string
+          extracted_data: Json
+          id: string
+          rationale: string | null
+          recommendation: string | null
+          red_flags_triggered: string[]
+          status: string
+          updated_at: string
+          urgency_level: string | null
+          user_id: string
+        }
+        Insert: {
+          chief_complaint?: string | null
+          completed_at?: string | null
+          created_at?: string
+          extracted_data?: Json
+          id?: string
+          rationale?: string | null
+          recommendation?: string | null
+          red_flags_triggered?: string[]
+          status?: string
+          updated_at?: string
+          urgency_level?: string | null
+          user_id: string
+        }
+        Update: {
+          chief_complaint?: string | null
+          completed_at?: string | null
+          created_at?: string
+          extracted_data?: Json
+          id?: string
+          rationale?: string | null
+          recommendation?: string | null
+          red_flags_triggered?: string[]
+          status?: string
+          updated_at?: string
+          urgency_level?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           age: number | null
