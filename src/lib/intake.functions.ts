@@ -1,7 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import type { UIMessage } from "ai";
 
 export const createIntakeSession = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -50,7 +49,7 @@ export const getIntakeSession = createServerFn({ method: "POST" })
     const uiMessages = (messages ?? []).map((m) => ({
       id: m.id,
       role: m.role as "user" | "assistant" | "system" | "tool",
-      parts: (m.parts as unknown as UIMessage["parts"]) ?? [],
+      parts: JSON.parse(JSON.stringify(m.parts ?? [])) as Array<{ type: string; text?: string }>,
     }));
     return { session, messages: uiMessages };
   });
