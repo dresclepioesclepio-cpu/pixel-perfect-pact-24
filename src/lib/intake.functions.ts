@@ -47,10 +47,10 @@ export const getIntakeSession = createServerFn({ method: "POST" })
     if (sErr) throw new Error(sErr.message);
     if (mErr) throw new Error(mErr.message);
 
-    const uiMessages: UIMessage[] = (messages ?? []).map((m) => ({
+    const uiMessages = (messages ?? []).map((m) => ({
       id: m.id,
-      role: m.role as UIMessage["role"],
-      parts: (m.parts as UIMessage["parts"]) ?? [],
+      role: m.role as "user" | "assistant" | "system" | "tool",
+      parts: (m.parts as unknown as UIMessage["parts"]) ?? [],
     }));
     return { session, messages: uiMessages };
   });

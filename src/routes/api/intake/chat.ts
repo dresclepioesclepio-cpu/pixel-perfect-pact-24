@@ -132,7 +132,7 @@ export const Route = createFileRoute("/api/intake/chat")({
         const result = streamText({
           model,
           system: `${INTAKE_SYSTEM_PROMPT}\n\n${profileLine}${flagLine}`,
-          messages: convertToModelMessages(messages),
+          messages: await convertToModelMessages(messages),
           tools,
           stopWhen: stepCountIs(50),
         });
@@ -151,7 +151,7 @@ export const Route = createFileRoute("/api/intake/chat")({
                   session_id: sessionId,
                   user_id: userId,
                   role: m.role,
-                  parts: m.parts as unknown as object,
+                  parts: m.parts as unknown as never,
                 })),
               );
             }
