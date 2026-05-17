@@ -1,18 +1,31 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { Construction } from "lucide-react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect, useRef } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { Loader2 } from "lucide-react";
+import { createIntakeSession } from "@/lib/intake.functions";
 
 export const Route = createFileRoute("/_authenticated/app/intake")({
-  component: () => <Placeholder title="Intake de sintomas" desc="Sprint 3: conversa guiada de relato e extração estruturada." />,
+  component: NewIntake,
+  head: () => ({ meta: [{ title: "Nova orientação — Asclepio" }] }),
 });
 
-export function Placeholder({ title, desc }: { title: string; desc: string }) {
+function NewIntake() {
+  const navigate = useNavigate();
+  const create = useServerFn(createIntakeSession);
+  const started = useRef(false);
+
+  useEffect(() => {
+    if (started.current) return;
+    started.current = true;
+    create({})
+      .then(({ id }) => navigate({ to: "/app/intake/$sessionId", params: { sessionId: id }, replace: true }))
+      .catch(() => navigate({ to: "/app", replace: true }));
+  }, [create, navigate]);
+
   return (
-    <div className="mx-auto max-w-xl py-16 text-center">
-      <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-secondary text-muted-foreground">
-        <Construction className="h-6 w-6" />
-      </div>
-      <h1 className="mt-6 font-display text-3xl">{title}</h1>
-      <p className="mt-2 text-muted-foreground">{desc}</p>
+    <div className="mx-auto flex max-w-md flex-col items-center gap-3 py-24 text-center text-muted-foreground">
+      <Loader2 className="h-6 w-6 animate-spin text-primary" />
+      <p>Preparando sua sessão…</p>
     </div>
   );
 }
