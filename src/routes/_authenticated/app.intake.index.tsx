@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { AlertCircle, Loader2 } from "lucide-react";
+import { CircleAlert as AlertCircle, Loader as Loader2 } from "lucide-react";
 import { createIntakeSession } from "@/lib/intake.functions";
 import { Button } from "@/components/ui/button";
 
@@ -32,7 +32,8 @@ function NewIntake() {
         setError(e instanceof Error ? e.message : "Falha ao criar sessão");
       }
     })();
-  }, [create, navigate]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (error) {
     return (
