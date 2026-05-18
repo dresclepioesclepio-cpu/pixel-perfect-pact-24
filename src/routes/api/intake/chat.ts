@@ -108,6 +108,7 @@ export const Route = createFileRoute("/api/intake/chat")({
               urgency_level: z.enum(URGENCIES),
               rationale: z.string().describe("Justificativa curta em PT-BR."),
               next_steps: z.array(z.string()).describe("Próximos passos práticos para o usuário."),
+              alert_signs: z.array(z.string()).optional().describe("Sinais que indicam necessidade de buscar ajuda imediata, mesmo em casos não emergenciais."),
             }),
             execute: async (input) => {
               // Persist decision on the session
